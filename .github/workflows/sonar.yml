@@ -32,3 +32,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+             args: >
+                -Dsonar.organization=fabz2004
+                -Dsonar.projectKey=fabz2004_IG-Software-III
+                -Dsonar.sources=.
+                -Dsonar.exclusions=**/bin/**,**/obj/**
+                -Dsonar.host.url=https://sonarcloud.io
