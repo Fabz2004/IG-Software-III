@@ -1,0 +1,203 @@
+﻿<!-- Modal de inicio de sesión -->
+<div id="loginModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+    <div class="bg-[#E1DECD] w-full max-w-md p-6 rounded-lg shadow-lg relative">
+        <button onclick="document.getElementById('loginModal').classList.add('hidden')"
+                class="absolute top-2 right-2 text-gray-600 hover:text-black">
+            ✕
+        </button>
+
+        <h3 class="text-lg italic text-center tracking-wider mb-2">Bienvenido a</h3>
+        <div class="flex justify-center mb-4">
+            <img src="~/Imagenes/ALODANLOGO.jpeg" alt="ALODAN" class="h-14 w-auto" />
+        </div>
+
+        <!-- 🟢 Formulario de login -->
+        <form method="post" action="@Url.Action("Login", "Cuenta")">
+            <!-- Este campo oculto indica de dónde se abrió el modal -->
+            <input type="hidden" name="Origen" value="@ViewBag.Origen ?? " Cuenta"" />
+
+            <input type="email" name="Email" placeholder="Correo electrónico"
+                   class="w-full p-2 border border-black rounded mb-3 bg-[#E1DECD]" required />
+            <input type="password" name="Password" placeholder="Contraseña"
+                   class="w-full p-2 border border-black rounded mb-3 bg-[#E1DECD]" required />
+
+            <button type="submit"
+                    class="w-full bg-black text-white py-2 rounded hover:bg-gray-800">
+                Iniciar sesión
+            </button>
+        </form>
+
+        <div class="mt-4 text-center text-sm text-gray-700">
+            <a href="@Url.Action("OlvideContrasena", "Cuenta")"
+               class="text-black font-semibold hover:underline">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <p class="mt-4 text-center text-sm text-gray-700">
+            ¿No tienes cuenta?
+            <a href="javascript:void(0)" onclick="abrirRegistro()" class="text-black font-semibold hover:underline">
+                Regístrate aquí
+            </a>
+        </p>
+    </div>
+</div>
+
+<!-- Modal de registro -->
+<div id="registroModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+    <div class="bg-[#E1DECD] w-full max-w-md p-6 rounded-lg shadow-lg relative">
+        <button onclick="document.getElementById('registroModal').classList.add('hidden')"
+                class="absolute top-2 right-2 text-gray-600 hover:text-black">
+            ✕
+        </button>
+
+        <h3 class="text-lg italic text-center tracking-wider mb-2">Crear cuenta</h3>
+
+        <!-- 🧩 FORMULARIO DE REGISTRO -->
+        <form id="registroForm" method="post" action="@Url.Action("Registro", "Cuenta")">
+            <input type="text" id="nombre" name="Nombre" placeholder="Nombre completo"
+                   class="w-full p-2 border border-gray-300 rounded mb-3" required />
+
+            <input type="email" id="email" name="Email" placeholder="Correo electrónico"
+                   class="w-full p-2 border border-gray-300 rounded mb-3" required />
+
+            <input type="password" id="password" name="Password" placeholder="Contraseña (mínimo 8 caracteres)"
+                   class="w-full p-2 border border-gray-300 rounded mb-3" required />
+
+            <input type="text" id="telefono" name="Telefono" placeholder="Teléfono (9 dígitos)"
+                   class="w-full p-2 border border-gray-300 rounded mb-3" required />
+
+            <textarea id="direccion" name="Direccion" placeholder="Dirección de envío"
+                      class="w-full p-2 border border-gray-300 rounded mb-3" required></textarea>
+
+            <button type="submit"
+                    class="w-full bg-black text-white py-2 rounded hover:bg-gray-800">
+                Registrarse
+            </button>
+        </form>
+
+        <!-- 🧩 SCRIPTS -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            document.getElementById("registroForm").addEventListener("submit", async function (e) {
+                e.preventDefault(); // evita el envío hasta validar
+
+                const nombre = document.getElementById("nombre").value.trim();
+                const email = document.getElementById("email").value.trim();
+                const password = document.getElementById("password").value.trim();
+                const telefono = document.getElementById("telefono").value.trim();
+                const direccion = document.getElementById("direccion").value.trim();
+
+                // 🧠 Validaciones locales
+                if (password.length < 8) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Contraseña inválida",
+                        text: "Debe tener al menos 8 caracteres.",
+                        confirmButtonColor: "#000"
+                    });
+                    return;
+                }
+
+                if (!/^\d{9}$/.test(telefono)) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Teléfono inválido",
+                        text: "Debe tener exactamente 9 dígitos numéricos.",
+                        confirmButtonColor: "#000"
+                    });
+                    return;
+                }
+
+                // 📨 Verificar correo duplicado (AJAX)
+                const response = await fetch(`/Cuenta/VerificarCorreo?email=${encodeURIComponent(email)}`);
+                const existe = await response.json();
+
+                if (existe) {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Correo ya registrado",
+                        text: "Por favor, utiliza otro correo electrónico.",
+                        confirmButtonColor: "#000"
+                    });
+                    return;
+                }
+
+                // ✅ Si todo está correcto, enviar el formulario
+                e.target.submit();
+            });
+
+            // Abrir registro
+            function abrirRegistro() {
+                document.getElementById('loginModal').classList.add('hidden');
+                document.getElementById('registroModal').classList.remove('hidden');
+            }
+
+            // Mostrar alertas del servidor (por si hay validaciones del backend)
+            document.addEventListener("DOMContentLoaded", function () {
+                @if (TempData["RegistroExitoso"] != null)
+                {
+                        <text>
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Cuenta creada exitosamente 🎉',
+                                text: 'Ahora puedes iniciar sesión en ALODAN.',
+                                confirmButtonColor: '#000'
+                            }).then(() => {
+                                document.getElementById('registroModal').classList.add('hidden');
+                                document.getElementById('loginModal').classList.remove('hidden');
+                            });
+                        </text>
+                }
+            });
+        </script>
+
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function abrirRegistro() {
+        document.getElementById('loginModal').classList.add('hidden');
+        document.getElementById('registroModal').classList.remove('hidden');
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        @if (TempData["ErrorRegistro"] != null)
+        {
+                <text>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Registro inválido',
+                        text: '@TempData["ErrorRegistro"]',
+                        confirmButtonColor: '#000'
+                    }).then(() => {
+                        // Reabre el modal de registro automáticamente
+                        document.getElementById('registroModal').classList.remove('hidden');
+                    });
+                </text>
+        }
+
+                @if (TempData["RegistroExitoso"] != null)
+    {
+            <text>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Cuenta creada exitosamente 🎉',
+                    text: 'Bienvenido(a) a ALODAN ❤️',
+                    confirmButtonColor: '#000'
+                }).then(() => {
+                    // Cierra cualquier modal abierto
+                    document.getElementById('registroModal').classList.add('hidden');
+                    document.getElementById('loginModal').classList.add('hidden');
+
+                    // Redirige a Checkout o recarga la página actual
+                    window.location.href = '/Checkout';
+                });
+            </text>
+    }
+
+}
+
+    });
+</script>

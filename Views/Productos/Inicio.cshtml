@@ -1,0 +1,98 @@
+﻿
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<div class="flex gap-4 p-6 justify-center">
+
+  
+    <div class="flex flex-col items-center">
+        <div class="relative border-2 border-black" style="width: 400px; height: 700px;">
+            <img src="~/Imagenes/Pantalones.png" alt="Pantalones" class="w-full h-full object-cover">
+            <div class="absolute top-4 left-4 text-white">
+                <h2 class="text-4xl font-extrabold uppercase font-playfair text-white"
+                    style="text-shadow: 2px 2px 6px rgba(0,0,0,0.6);">
+                    Pantalones
+                </h2>
+                <a href="@Url.Action("Index", "Productos", new { categoria = "Pantalones" })"
+                   class="mt-2 inline-block border-2 border-white bg-black/15 px-6 py-2 text-sm font-pathway uppercase text-white hover:bg-white hover:text-black transition">
+                    COMPRAR AHORA
+                </a>
+            </div>
+        </div>
+
+        
+        <div class="relative w-full mt-8 flex justify-center">
+            <div class="relative text-center font-playfair text-black text-4xl leading-tight">
+
+           
+                <span class="absolute -top-4 -left-16 w-16 border-t-2 border-black"></span>
+                <span class="absolute -top-4 -left-16 h-16 border-l-2 border-black"></span>
+                <span class="absolute bottom-6 -right-16 w-16 border-b-2 border-black"></span>
+                <span class="absolute bottom-6 -right-16 h-16 border-r-2 border-black"></span>
+
+               
+                <div class="font-bold drop-shadow-md">VESTIR</div>
+                <div class="flex justify-center items-baseline space-x-2">
+                    <span class="text-2xl">con</span>
+                    <span class="font-bold drop-shadow-md">PROPÓSITO</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="flex flex-col gap-4">
+
+       
+        <div class="flex gap-4">
+            
+            <div class="relative border-2 border-black" style="width: 300px; height: 450px;">
+                <img src="~/Imagenes/Abrigos.png" alt="Abrigos" class="w-full h-full object-cover">
+                <div class="absolute inset-0 flex flex-col justify-center items-center text-black">
+                    <h2 class="text-4xl font-extrabold uppercase font-playfair text-black"
+                        style="text-shadow: 2px 2px 6px rgba(0,0,0,0.4);">
+                        Abrigos
+                    </h2>
+                    <a href="@Url.Action("Index", "Productos", new { categoria = "Abrigos" })"
+                       class="mt-2 inline-block border-2 border-black bg-black/15 px-6 py-2 text-sm font-pathway uppercase text-black hover:bg-black hover:text-white transition">
+                        COMPRAR AHORA
+                    </a>
+                </div>
+            </div>
+
+        
+            <div class="relative border-2 border-black" style="width: 300px; height: 450px;">
+                <img src="~/Imagenes/Blazers.jpg" alt="Blazers" class="w-full h-full object-cover">
+                <div class="absolute inset-0 flex flex-col justify-center items-center text-black">
+                    <h2 class="text-4xl font-extrabold uppercase font-playfair text-black"
+                        style="text-shadow: 2px 2px 6px rgba(0,0,0,0.4);">
+                        Blazers
+                    </h2>
+                    <a href="@Url.Action("Index", "Productos", new { categoria = "Blazers" })"
+                       class="mt-2 inline-block border-2 border-black bg-black/15 px-6 py-2 text-sm font-pathway uppercase text-black hover:bg-black hover:text-white transition">
+                        COMPRAR AHORA
+                    </a>
+                </div>
+            </div>
+        </div>
+
+       
+        <div class="relative border-2 border-black" style="width: 615px; height: 330px;">
+            <img src="~/Imagenes/Vestidos.jpeg" alt="Vestidos" class="w-full h-full object-cover">
+            <div class="absolute bottom-4 left-4 text-white">
+                <h2 class="text-4xl font-extrabold uppercase font-playfair text-white"
+                    style="text-shadow: 2px 2px 6px rgba(0,0,0,0.6);">
+                    Vestidos
+                </h2>
+                <a href="@Url.Action("Index", "Productos", new { categoria = "Vestidos" })"
+                   class="mt-2 inline-block border-2 border-white bg-black/15 px-6 py-2 text-sm font-pathway uppercase text-white hover:bg-white hover:text-black transition">
+                    COMPRAR AHORA
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+

@@ -1,0 +1,26 @@
+﻿@model ALODAN.Models.Usuario
+
+@{
+    ViewData["Title"] = "Mi Perfil";
+}
+
+<div class="container mx-auto px-12">
+ 
+    <h2 class="text-base font-playfair font-semibold px-4 py-2 mb-6 border-b border-gray-300 w-full"
+        style="background-color:#E1DECD;">
+        Mi Cuenta
+    </h2>
+
+    <div class="bg-gray-100 p-4 rounded">
+        <p><strong>Nombre:</strong> @Model.Nombre</p>
+        <p><strong>Email:</strong> @Model.Email</p>
+        <p><strong>Teléfono:</strong> @Model.Telefono</p>
+        <p><strong>Dirección:</strong> @Model.Direccion</p>
+    </div>
+
+    <div class="mt-6">
+        <a asp-action="Logout" class="px-4 py-2 bg-black-500 text-white rounded hover:bg-red-600">
+            Cerrar sesión
+        </a>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+﻿@model ALODAN.Models.Usuario
+
+@{
+    ViewData["Title"] = "Proceso de Pago";
+}
+
+<div class="container mx-auto px-12">
+
+    <h2 class="text-base font-playfair font-semibold px-4 py-2 mb-6 border-b border-gray-300 w-full"
+        style="background-color:#E1DECD;">
+        <a href="@Url.Action("Index", "Carrito")" class="hover:underline">Mi Carrito</a> / Proceso de Pago
+    </h2>
+
+    <div class="bg-gray-100 p-4 rounded mb-6">
+        <h3 class="font-semibold mb-2">Datos del comprador</h3>
+        <p><strong>Nombre:</strong> @Model.Nombre</p>
+        <p><strong>Email:</strong> @Model.Email</p>
+        <p><strong>Teléfono:</strong> @Model.Telefono</p>
+        <p><strong>Dirección de envío:</strong> @Model.Direccion</p>
+    </div>
+
+    <div class="bg-white p-4 rounded shadow">
+        <h3 class="font-semibold mb-2">Método de pago</h3>
+        <form method="post" action="@Url.Action("ConfirmarCompra", "Compras")">
+            <input type="text" placeholder="Número de tarjeta"
+                   class="w-full p-2 border border-gray-300 rounded mb-3" required />
+            <div class="flex space-x-2">
+                <input type="text" placeholder="MM/AA"
+                       class="w-1/2 p-2 border border-gray-300 rounded mb-3" required />
+                <input type="text" placeholder="CVC"
+                       class="w-1/2 p-2 border border-gray-300 rounded mb-3" required />
+            </div>
+            <button type="submit"
+                    class="w-full bg-black text-white py-2 rounded hover:bg-gray-800">
+                Confirmar pago
+            </button>
+        </form>
+
+    </div>
+</div>

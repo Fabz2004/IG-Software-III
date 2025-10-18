@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "Cuenta";
+}
+
+<div class="container mx-auto px-12 text-center">
+    <h2 class="text-base font-playfair font-semibold px-4 py-2 mb-6 border-b border-gray-300 w-full"
+        style="background-color:#E1DECD;">
+        Mi Cuenta
+    </h2>
+
+    <p class="mb-6 text-gray-700">Para continuar, inicia sesión o crea una nueva cuenta.</p>
+
+    <div class="flex justify-center space-x-6">
+        <!-- Botón de iniciar sesión -->
+        <button onclick="abrirLogin()"
+                class="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800">
+            Iniciar sesión
+        </button>
+
+        <!-- Botón de registrarse -->
+        <button onclick="abrirRegistro()"
+                class="px-6 py-3 bg-gray-300 text-black rounded-lg hover:bg-gray-400">
+            Crear cuenta
+        </button>
+    </div>
+</div>
+
+<!-- Importar los modales existentes -->
+@await Html.PartialAsync("~/Views/Carrito/_ModalesLoginRegistro.cshtml")
+
+@section Scripts {
+    <script>
+        function abrirLogin() {
+            document.getElementById('loginModal').classList.remove('hidden');
+            document.getElementById('registroModal').classList.add('hidden');
+        }
+
+        function abrirRegistro() {
+            document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('registroModal').classList.remove('hidden');
+        }
+    </script>
+}

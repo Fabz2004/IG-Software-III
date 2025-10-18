@@ -1,0 +1,49 @@
+﻿@model IEnumerable<ALODAN.Models.Pedido>
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Gestión de Pedidos";
+}
+
+<div class="container mx-auto px-8 py-6">
+    <h2 class="text-2xl font-bold mb-6">Gestión de Pedidos</h2>
+
+    <table class="w-full border border-gray-300 border-collapse text-sm">
+        <thead style="background-color:#E1DECD;">
+            <tr class="font-semibold text-left">
+                <th class="p-2">ID</th>
+                <th class="p-2">Cliente</th>
+                <th class="p-2">Fecha</th>
+                <th class="p-2 text-center">Total (S/.)</th>
+                <th class="p-2 text-center">Estado</th>
+                <th class="p-2 text-center">Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pedido in Model)
+            {
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="p-2">@pedido.Id</td>
+                    <td class="p-2">@pedido.Usuario?.Nombre</td>
+                    <td class="p-2">@pedido.FechaPedido.ToString("dd/MM/yyyy")</td>
+                    <td class="p-2 text-center">@pedido.Total.ToString("N2")</td>
+                    <td class="p-2 text-center">@pedido.Estado</td>
+                    <td class="p-2 text-center">
+                        <form asp-action="ActualizarEstado" method="post" class="inline">
+                            <input type="hidden" name="id" value="@pedido.Id" />
+                            <select name="nuevoEstado" class="border border-gray-300 rounded px-2 py-1 text-sm">
+                                <option>Solicitud recibida</option>
+                                <option>En preparación</option>
+                                <option>Listo para retiro</option>
+                                <option>Entregado</option>
+                            </select>
+                            <button type="submit" class="bg-black text-white px-3 py-1 rounded ml-2 hover:bg-gray-800 text-sm">
+                                Actualizar
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

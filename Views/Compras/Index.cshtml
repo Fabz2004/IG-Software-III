@@ -1,0 +1,81 @@
+﻿@model List<ALODAN.Models.Pedido>
+
+@{
+    ViewData["Title"] = "Mis Compras";
+}
+
+<div class="container mx-auto px-12">
+
+    <h2 class="text-base font-playfair font-semibold px-4 py-2 mb-6 border-b border-gray-300 w-full"
+        style="background-color:#E1DECD;">
+        Mis Compras
+    </h2>
+
+    @if (!Model.Any())
+    {
+        <p>No tienes compras registradas.</p>
+        <a href="@Url.Action("Inicio", "Productos")"
+           class="mt-4 inline-block px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-700">
+            Seguir comprando
+        </a>
+    }
+    else
+    {
+        foreach (var pedido in Model)
+        {
+            <div class="border rounded-lg p-4 mb-6 bg-gray-50 shadow-sm">
+                <div class="flex justify-between items-center mb-3">
+                    <div>
+                        <p class="font-semibold">Pedido N° @pedido.NumeroPedido</p>
+                        <p class="text-sm text-gray-600">Fecha: @pedido.FechaPedido.ToString("dd/MM/yyyy")</p>
+                    </div>
+                    <div>
+                        <span class="px-3 py-1 rounded text-sm font-semibold
+                                    @(pedido.Estado == "Entregado" ? "bg-green-500 text-white" :
+                                                            pedido.Estado == "Listo para retiro" ? "bg-blue-400 text-white" :
+                                                            pedido.Estado == "En preparación" ? "bg-yellow-400 text-black" :
+                                                            "bg-gray-300 text-gray-800")">
+                    @pedido.Estado
+                </span>
+            </div>
+        </div>
+
+                <table class="w-full border border-collapse text-sm">
+                    <thead style="background-color:#E1DECD;">
+                        <tr>
+                            <th class="p-2 text-left w-2/5">Producto</th>
+                            <th class="p-2 text-center w-1/12">Talla</th>
+                            <th class="p-2 text-center w-1/12">Color</th>
+                            <th class="p-2 text-center w-1/12">Cantidad</th>
+                            <th class="p-2 text-center w-1/12">Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                @foreach (var item in pedido.Detalles)
+                        {
+                            <tr class="border-b">
+                                <td class="p-2 flex items-center">
+                                    <img src="@item.Producto?.ImagenUrl" class="w-12 h-12 object-cover mr-3" />
+                                    @item.Producto?.Nombre
+                                </td>
+                                <td class="p-2 text-center">@item.Talla</td>
+                                <td class="p-2 text-center">
+                                    <span class="w-6 h-6 rounded-full inline-block border"
+                                          style="background-color:@item.Color"></span>
+                                </td>
+                                <td class="p-2 text-center">@item.Cantidad</td>
+                                <td class="p-2 text-center">S/. @item.PrecioUnitario.ToString("N2")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <div class="flex justify-end mt-3">
+                    <p class="font-semibold text-right">Total: S/. @pedido.Total.ToString("N2")</p>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+

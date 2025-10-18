@@ -1,0 +1,63 @@
+﻿@{
+    ViewData["Title"] = "Estado de Envío";
+    
+    int estadoActual = 1;
+}
+
+<div class="container mx-auto px-8 py-6">
+    
+    <h2 class="text-base font-playfair font-semibold px-4 py-2 mb-6 border-b border-gray-300 w-full"
+        style="background-color:#E1DECD;">
+        <a href="@Url.Action("Index", "Compras")" class="hover:underline">Mis Compras</a> / Estado de envío
+    </h2>
+
+    <h2 class="text-2xl font-bold mb-8">Estado de Envío</h2>
+
+    <div class="flex items-center justify-between relative mb-12">
+     
+        <div class="absolute top-1/2 left-0 right-0 border-t-2 border-gray-300 z-0"></div>
+
+       
+        <div class="flex flex-col items-center z-10 w-1/4">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center
+                        @(estadoActual >= 0 ? "bg-black text-white" : "bg-gray-300 text-gray-600")">
+                1
+            </div>
+            <span class="mt-2 text-sm">Solicitud recibida</span>
+        </div>
+
+      
+        <div class="flex flex-col items-center z-10 w-1/4">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center
+                        @(estadoActual >= 1 ? "bg-black text-white" : "bg-gray-300 text-gray-600")">
+                2
+            </div>
+            <span class="mt-2 text-sm">En preparación</span>
+        </div>
+
+     
+        <div class="flex flex-col items-center z-10 w-1/4">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center
+                        @(estadoActual >= 2 ? "bg-black text-white" : "bg-gray-300 text-gray-600")">
+                3
+            </div>
+            <span class="mt-2 text-sm">Listo para retiro</span>
+        </div>
+
+ 
+        <div class="flex flex-col items-center z-10 w-1/4">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center
+                        @(estadoActual >= 3 ? "bg-black text-white" : "bg-gray-300 text-gray-600")">
+                4
+            </div>
+            <span class="mt-2 text-sm">Entregado</span>
+        </div>
+    </div>
+
+    <div class="mt-6">
+        <a href="@Url.Action("Index", "Compras")"
+           class="px-6 py-3 bg-gray-300 rounded-lg hover:bg-gray-400">
+            ← Atrás
+        </a>
+    </div>
+</div>

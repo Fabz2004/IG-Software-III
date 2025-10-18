@@ -1,0 +1,184 @@
+﻿@model List<ALODAN.Models.CarritoItem>
+
+@{
+    ViewData["Title"] = "Carrito";
+}
+
+<div class="container mx-auto px-12">
+    <h2 class="text-base font-playfair font-semibold px-6 py-2 mb-6 border-b border-gray-300 w-full"
+        style="background-color:#E1DECD;">
+        Mi Carrito
+    </h2>
+
+    @if (Model.Count == 0)
+    {
+        <p>Tu carrito está vacío.</p>
+        <a href="@Url.Action("Inicio", "Productos")"
+           class="mt-4 inline-block px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-700">
+            Seguir comprando
+        </a>
+    }
+    else
+    {
+        @if (ViewBag.Descuento > 0)
+        {
+            <div class="p-3 mb-4 text-green-800 bg-green-100 rounded-lg border border-green-300 text-center font-medium">
+                🎉 ¡Has obtenido un descuento especial por tu compra! 🎉
+            </div>
+        }
+
+        <table class="w-full border border-collapse">
+            <thead>
+                <tr class="font-bold" style="background-color:#E1DECD;">
+                    <th class="px-6 py-2 text-left w-2/5">Producto</th>
+                    <th class="p-2 text-center w-1/12">Talla</th>
+                    <th class="p-2 text-center w-1/12">Color</th>
+                    <th class="p-2 text-center w-1/12">Cantidad</th>
+                    <th class="p-2 text-center w-1/12">Precio</th>
+                    <th class="p-2 text-center w-1/12">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="border-b">
+                        <td class="px-6 py-2 flex items-center">
+                            <img src="@item.ImagenUrl" class="w-16 h-16 object-cover mr-4" />
+                            @item.Nombre
+                        </td>
+                        <td class="p-2 text-center">@item.Talla</td>
+                        <td class="p-2 text-center">
+                            <span class="w-6 h-6 rounded-full inline-block border"
+                                  style="background-color:@item.Color"></span>
+                        </td>
+
+                        <td class="text-center align-middle">
+                            <form method="post" asp-action="ActualizarCantidad" asp-controller="Carrito"
+                                  class="flex justify-center items-center space-x-2">
+                                <input type="hidden" name="productoId" value="@item.ProductoId" />
+
+                                <!-- Campo numérico editable -->
+                                <input type="number"
+                                       name="nuevaCantidad"
+                                       value="@item.Cantidad"
+                                       min="1"
+                                       class="w-16 text-center border border-gray-300 rounded p-1"
+                                       onchange="actualizarCantidadManual(this, @item.ProductoId)" />
+                            </form>
+                        </td>
+
+                        <td class="p-2 text-center">
+                            <span class="whitespace-nowrap">S/. @item.Precio.ToString("N2")</span>
+                        </td>
+
+                        <td class="p-2 text-center">
+                            <form id="formEliminar-@item.ProductoId"
+                                  method="post"
+                                  asp-action="Eliminar"
+                                  asp-controller="Carrito"
+                                  class="inline">
+                                <input type="hidden" name="id" value="@item.ProductoId" />
+                                <button type="button"
+                                        class="text-red-500 hover:underline"
+                                        onclick="confirmarEliminacion(@item.ProductoId)">
+                                    Eliminar
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr style="background-color:#F5F5F5;">
+                    <td colspan="5" class="px-6 py-2 text-left font-semibold">Subtotal</td>
+                    <td colspan="2" class="p-2 pr-8 text-right">
+                        <span class="whitespace-nowrap">S/. @ViewBag.Subtotal.ToString("N2")</span>
+                    </td>
+                </tr>
+
+                @if (ViewBag.Descuento > 0)
+                {
+                    <tr class="bg-green-50 text-green-700 font-semibold">
+                        <td colspan="5" class="px-6 py-2 text-left">Descuento aplicado 🎁</td>
+                        <td colspan="2" class="p-2 pr-8 text-right">
+                            -S/. @ViewBag.Descuento.ToString("N2")
+                        </td>
+                    </tr>
+                }
+
+                <tr class="font-bold" style="background-color:#E1DECD;">
+                    <td colspan="5" class="px-6 py-2 text-left">Total</td>
+                    <td colspan="2" class="p-2 pr-8 text-right">
+                        <span class="whitespace-nowrap">S/. @ViewBag.Total.ToString("N2")</span>
+                    </td>
+                </tr>
+            </tfoot>
+
+        </table>
+
+        <div class="mt-6 flex justify-between items-center">
+            <a href="javascript:history.back()"
+               class="px-6 py-3 bg-gray-300 rounded-lg hover:bg-gray-400">
+                Seguir comprando
+            </a>
+
+            <form method="post" asp-action="ProcederPago" asp-controller="Carrito">
+                <button type="submit"
+                        class="mt-2 px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-700">
+                    Proceder al pago
+                </button>
+            </form>
+        </div>
+    }
+</div>
+
+<!-- ✅ Mostrar modal automáticamente si no está logueado -->
+@if (ViewBag.MostrarLogin != null && (bool)ViewBag.MostrarLogin)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const modal = document.getElementById('loginModal');
+            if (modal) modal.classList.remove('hidden');
+        });
+    </script>
+}
+
+<!-- ✅ Partial de modales -->
+@await Html.PartialAsync("~/Views/Carrito/_ModalesLoginRegistro.cshtml")
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // 🔹 Confirmación elegante antes de eliminar
+        function confirmarEliminacion(productoId) {
+            Swal.fire({
+                title: '¿Eliminar producto?',
+                text: 'Este producto se eliminará del carrito.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#000',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`formEliminar-${productoId}`).submit();
+                }
+            });
+        }
+
+        // 🔹 Actualización dinámica de cantidad
+        function actualizarCantidadManual(input, productoId) {
+            const cantidad = input.value;
+            fetch('/Carrito/ActualizarCantidad', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `productoId=${productoId}&nuevaCantidad=${cantidad}`
+            }).then(() => {
+                location.reload();
+            });
+        }
+    </script>
+}

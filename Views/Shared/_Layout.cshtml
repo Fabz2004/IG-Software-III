@@ -1,0 +1,263 @@
+﻿
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ALODAN</title>
+
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+  
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Pathway+Extreme:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        .font-playfair {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .font-pathway {
+            font-family: 'Pathway Extreme', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .font-montserrat {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .border-3 {
+            border-width: 3px;
+        }
+
+    </style>
+</head>
+<body class="bg-white font-sans">
+
+
+    <header class="fixed top-0 left-0 w-full h-16 flex justify-between items-center px-8 border-b border-gray-300 shadow-md z-20"
+            style="background-color:#E1DECD;">
+
+        <!-- LOGO CENTRADO -->
+        <div class="absolute left-1/2 transform -translate-x-1/2">
+            <a href="/">
+                <img src="~/Imagenes/ALODANLOGO.jpeg" alt="ALODAN" class="h-16 w-auto">
+            </a>
+        </div>
+
+        <!-- ICONOS DERECHA -->
+        <div class="ml-auto flex items-center space-x-6 text-black">
+            <button id="searchToggle" class="text-xl hover:font-bold focus:outline-none">
+                <i class="fas fa-search"></i>
+            </button>
+
+            <a asp-controller="Carrito" asp-action="Index" class="relative text-xl hover:font-bold">
+                <i class="fas fa-shopping-cart"></i>
+                @await Component.InvokeAsync("CarritoCantidad")
+            </a>
+
+
+
+
+
+
+            <a asp-controller="Compras" asp-action="Index" class="text-xl hover:font-bold">
+                <i class="fas fa-bag-shopping"></i>
+            </a>
+
+            @* 🔹 Verifica si el usuario está logueado *@
+            @if (Context.Session.GetString("UsuarioLogueado") != null)
+            {
+                <!-- Usuario logueado → va a su perfil -->
+                <a asp-controller="Cuenta" asp-action="Perfil" class="text-xl hover:font-bold">
+                    <i class="fas fa-user-circle"></i>
+                </a>
+            }
+            else
+            {
+                <!-- Usuario no logueado → abre modal de inicio de sesión -->
+                <button onclick="document.getElementById('loginModal').classList.remove('hidden')"
+                        class="text-xl hover:font-bold focus:outline-none">
+                    <i class="fas fa-user-circle"></i>
+                </button>
+            }
+        </div>
+    </header>
+
+    <!-- 🔽 Incluir el modal global de login / registro -->
+    @await Html.PartialAsync("~/Views/Carrito/_ModalesLoginRegistro.cshtml")
+
+
+
+    <!-- 🔍 Barra de búsqueda con filtros proporcionados -->
+    <div id="searchBar"
+         class="fixed top-16 left-0 w-full max-h-0 overflow-hidden transition-all duration-500 ease-in-out
+            bg-white border-b border-gray-300 px-8 shadow-md z-10">
+
+        <form asp-controller="Productos" asp-action="Buscar" method="get"
+              class="grid grid-cols-1 md:grid-cols-6 gap-4 items-end py-4">
+
+            <!-- Buscar producto -->
+            <div class="md:col-span-2">
+                <label class="block text-sm font-semibold mb-1">Buscar producto</label>
+                <input type="text" name="busqueda"
+                       placeholder="Ej. abrigo largo"
+                       class="w-full border border-gray-300 rounded p-2 focus:ring focus:ring-gray-400" />
+            </div>
+
+            <!-- Talla -->
+            <div>
+                <label class="block text-sm font-semibold mb-1">Talla</label>
+                <select name="talla" class="w-full border border-gray-300 rounded p-2">
+                    <option value="">Todas</option>
+                    <option value="XS">XS</option>
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                </select>
+            </div>
+
+            <!-- Precio mínimo -->
+            <div>
+                <label class="block text-sm font-semibold mb-1">Precio mínimo</label>
+                <input type="number" name="precioMin" min="0" step="0.01"
+                       class="w-full border border-gray-300 rounded p-2" />
+            </div>
+
+            <!-- Precio máximo -->
+            <div>
+                <label class="block text-sm font-semibold mb-1">Precio máximo</label>
+                <input type="number" name="precioMax" min="0" step="0.01"
+                       class="w-full border border-gray-300 rounded p-2" />
+            </div>
+
+            <!-- Botón Buscar -->
+            <div class="flex justify-end md:col-span-1">
+                <button type="submit"
+                        class="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 mt-6 w-full md:w-auto">
+                    Buscar
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+
+
+    <script>
+        const searchToggle = document.getElementById("searchToggle");
+        const searchBar = document.getElementById("searchBar");
+
+        // 🔹 Alterna mostrar/ocultar la barra de búsqueda
+        searchToggle.addEventListener("click", () => {
+            searchBar.classList.toggle("max-h-0");
+            searchBar.classList.toggle("max-h-[250px]");
+        });
+
+        // 🔹 Cierra la barra de búsqueda al hacer scroll o cambiar de vista
+        window.addEventListener("scroll", () => {
+            if (!searchBar.classList.contains("max-h-0")) {
+                searchBar.classList.add("max-h-0");
+                searchBar.classList.remove("max-h-[250px]");
+            }
+        });
+    </script>
+
+
+    <div class="flex pt-16">
+
+     
+        <aside class="w-1/6 h-[calc(100vh-4rem)] sticky top-16 border-r border-gray-300 pt-8 relative" style="background-color:#E1DECD;">
+            <nav class="flex flex-col items-start w-full px-6 space-y-3 text-black text-sm font-playfair">
+
+                <a asp-action="Inicio" asp-controller="Productos"
+                   class="relative pl-5 py-1 hover:font-bold @(ViewContext.RouteData.Values["action"]?.ToString() == "Inicio" ? "font-bold" : "")">
+                    <span class="absolute left-0 top-0 bottom-0 w-0.5 bg-black @(ViewContext.RouteData.Values["action"]?.ToString() == "Inicio" ? "" : "hidden")"></span>
+                    Inicio
+                </a>
+
+                <a asp-action="Index" asp-controller="Productos" asp-route-categoria="Vestidos"
+                   class="relative pl-5 py-1 hover:font-bold @((ViewContext.HttpContext.Request.Query["categoria"] == "Vestidos") ? "font-bold" : "")">
+                    <span class="absolute left-0 top-0 bottom-0 w-0.5 bg-black @((ViewContext.HttpContext.Request.Query["categoria"] == "Vestidos") ? "" : "hidden")"></span>
+                    Vestidos
+                </a>
+
+                <a asp-action="Index" asp-controller="Productos" asp-route-categoria="Blazers"
+                   class="relative pl-5 py-1 hover:font-bold @((ViewContext.HttpContext.Request.Query["categoria"] == "Blazers") ? "font-bold" : "")">
+                    <span class="absolute left-0 top-0 bottom-0 w-0.5 bg-black @((ViewContext.HttpContext.Request.Query["categoria"] == "Blazers") ? "" : "hidden")"></span>
+                    Blazers
+                </a>
+
+                <a asp-action="Index" asp-controller="Productos" asp-route-categoria="Pantalones"
+                   class="relative pl-5 py-1 hover:font-bold @((ViewContext.HttpContext.Request.Query["categoria"] == "Pantalones") ? "font-bold" : "")">
+                    <span class="absolute left-0 top-0 bottom-0 w-0.5 bg-black @((ViewContext.HttpContext.Request.Query["categoria"] == "Pantalones") ? "" : "hidden")"></span>
+                    Pantalones
+                </a>
+
+                <a asp-action="Index" asp-controller="Productos" asp-route-categoria="Abrigos"
+                   class="relative pl-5 py-1 hover:font-bold @((ViewContext.HttpContext.Request.Query["categoria"] == "Abrigos") ? "font-bold" : "")">
+                    <span class="absolute left-0 top-0 bottom-0 w-0.5 bg-black @((ViewContext.HttpContext.Request.Query["categoria"] == "Abrigos") ? "" : "hidden")"></span>
+                    Abrigos
+                </a>
+
+                <a asp-action="Index" asp-controller="Productos" asp-route-categoria="Professional Air"
+                   class="relative pl-5 py-1 w-full block text-[#141f5c] hover:font-bold
+          @((ViewContext.HttpContext.Request.Query["categoria"] == "Professional Air")
+                                                ? "font-bold border-[#141f5c]" : "")"
+                   style="@((ViewContext.HttpContext.Request.Query["categoria"] == "Professional Air") ? "border-left-width:3px; border-right-width:3px;" : "")">
+                    Professional Air ✈️
+                </a>
+
+
+
+
+
+                <a asp-action="Index" asp-controller="Productos" asp-route-categoria="Sobre nosotros"
+                   class="relative pl-5 py-1 hover:font-bold @((ViewContext.HttpContext.Request.Query["categoria"] == "Sobre nosotros") ? "font-bold" : "")">
+                    <span class="absolute left-0 top-0 bottom-0 w-0.5 bg-black @((ViewContext.HttpContext.Request.Query["categoria"] == "Sobre nosotros") ? "" : "hidden")"></span>
+                    Sobre nosotros
+                </a>
+            </nav>
+
+         
+            <div class="absolute bottom-4 left-6">
+                <a asp-action="Logout" asp-controller="Cuenta"
+                   class="flex items-center space-x-2 text-black hover:font-bold">
+                    <i class="fas fa-right-from-bracket"></i>
+                    <span>Cerrar sesión</span>
+                </a>
+            </div>
+        </aside>
+
+     
+        <main class="w-5/6 p-8 bg-white">
+            @RenderBody()
+        </main>
+    </div>
+
+
+    <footer class="w-full px-8 py-4 border-t border-gray-300 text-center bg-white text-black">
+        <p class="text-sm">&copy; 2025 ALODAN - Todos los derechos reservados</p>
+    </footer>
+
+   
+    <script>
+        const searchToggle = document.getElementById("searchToggle");
+        const searchBar = document.getElementById("searchBar");
+
+        searchToggle.addEventListener("click", () => {
+            searchBar.classList.toggle("max-h-0");
+            searchBar.classList.toggle("max-h-40");
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

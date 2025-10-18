@@ -1,0 +1,30 @@
+﻿@model IEnumerable<ALODAN.Models.Producto>
+
+@{
+    ViewData["Title"] = ViewBag.Categoria ?? "Tienda Online";
+}
+
+<div class="container mx-auto px-12">
+
+    <h2 class="text-base font-playfair font-semibold px-4 py-2 mb-6 border-b border-gray-300 w-full"
+        style="background-color:#E1DECD;">
+        @ViewBag.Categoria
+    </h2>
+
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12">
+        @foreach (var producto in Model)
+        {
+            <a href="@Url.Action("Detalles", "Productos", new { id = producto.Id })" class="flex flex-col">
+
+                <img class="w-full h-auto object-cover" src="@producto.ImagenUrl" alt="@producto.Nombre" />
+
+ 
+                <p class="mt-3 text-xs md:text-sm font-medium font-montserrat">@producto.Nombre</p>
+
+
+                <p class="text-xs md:text-sm font-bold font-montserrat">S/. @producto.Precio.ToString("N2")</p>
+            </a>
+        }
+    </div>
+</div>
