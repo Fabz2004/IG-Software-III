@@ -54,9 +54,9 @@ jobs:
             /d:sonar.host.url="https://sonarcloud.io" `
             /d:sonar.sources="." `
             /d:sonar.exclusions="**/bin/**,**/obj/**" `
-            /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+            /d:sonar.token="$env:SONAR_TOKEN"
 
           dotnet build
 
           ${{ runner.temp }}\scanner\dotnet-sonarscanner end `
-            /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+            /d:sonar.token="$env:SONAR_TOKEN"
